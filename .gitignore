@@ -22,3 +22,6 @@ raw-response.bin
 # Node
 node_modules/
 # package-lock.json is intentionally committed for reproducible builds (when present).
+
+# Build artifact. src/ is the source of truth; regenerate via `npm run build`.
+skill-portal-worker.js
