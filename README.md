@@ -96,9 +96,11 @@ Edit the `SKILLS` array literal near the top of `src/index.js`. Each entry:
     // OR
     // command: "gh repo view ...",  // for type "remote-shell"
   },
-  execution: {
-    type: "remote-shell"
-  }
+  execution: [               // array — most skills have a single entry;
+                             // skills runnable in multiple environments list them all
+    { type: "remote-shell" },
+    // { type: "local", hint: "Read <repo-relative-path>." }
+  ]
 }
 ```
 
