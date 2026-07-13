@@ -11,7 +11,9 @@ A Cloudflare Worker that aggregates documentation references for agent skills. D
 skill-portal/
 ├── src/
 │   ├── index.js           # fetch handler, dispatch, SKILLS + PORTAL_META data
-│   └── docs.md            # Markdown served at GET /docs (inlined at build time)
+│   ├── docs.md            # Markdown served at GET /docs (inlined at build time)
+│   └── skills/            # Per-skill document bundles (referenced from SKILLS entries)
+│       └── podcast/SKILL.md
 ├── wrangler.toml          # Cloudflare deployment config
 ├── package.json           # Dev dependencies + npm scripts
 ├── settings.json          # Snapshot of /settings from Cloudflare

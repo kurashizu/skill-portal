@@ -32,6 +32,18 @@ const SKILLS = [
     execution: {
       type: "remote-shell"
     }
+  },
+  {
+    name: "podcast",
+    description: "End-to-end Chinese tech podcast pipeline: research, scripting, edge-TTS, and short-lived share-link delivery.",
+    discovery: {
+      type: "url",
+      url: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/podcast/SKILL.md",
+      hint: "Fetch the SKILL.md for the full pipeline spec: research sources, script structure, TTS settings, upload protocol, and delivery conventions."
+    },
+    execution: {
+      type: "remote-shell"
+    }
   }
 ];
 
