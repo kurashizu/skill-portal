@@ -1,8 +1,14 @@
-// src/docs.md
-var docs_default = 'Service that aggregates documentation references for agent skills across projects.\n\n## Endpoints\n\n- `/` \u2014 Returns a JSON list of available skills with their access information.\n- `/docs` \u2014 This page. Documentation about the skill portal itself.\n\n## Schema (v2)\n\nEach skill entry contains `discovery` and `execution` blocks describing how to find and run its source of truth.\n\n### discovery.type: `url`\nPublic repository docs discoverable via a URL endpoint.\n- `url` \u2014 API endpoint that returns a directory listing.\n- `hint` \u2014 Guidance on how to use the url.\n\n### discovery.type: `remote-shell`\nResource accessible via a command on the remote shell (`https://shell.022025.xyz`).\n- `command` \u2014 The exact command to run.\n- `hint` \u2014 Guidance on how to use the command.\n\n### execution.type: `remote-shell`\nSkill execution happens via the remote shell endpoint.\n\n## Skills\n\nRetrieve `/` for the current list of skills.\n\n## Maintaining the skill portal\n\nTo add, remove, or update skills:\n\n1. **Pull the current worker code via API:**\n   ```\n   TOKEN=$(grep oauth_token ~/.config/.wrangler/config/default.toml | cut -d\'"\' -f2)\n   ACCOUNT=$(npx wrangler whoami 2>/dev/null | grep "Account ID" | awk \'{print $NF}\')\n   curl -s -H "Authorization: Bearer $TOKEN"      "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT/workers/scripts/skill-portal"\n   ```\n\n2. **Edit the worker code** \u2014 Modify the `skills` array in the `fetch` function.\n\n3. **Deploy the updated worker:**\n   ```\n   npx wrangler deploy /path/to/worker.js --name skill-portal --compatibility-date 2026-06-18\n   ```\n\n> Tip: Keep a local git repository of this worker\'s source code so you can pull, edit, and redeploy easily.\n';
+// skill-portal Cloudflare Worker.
+// Two endpoints:
+//   GET /      — JSON registry of skills (name + discovery + execution)
+//   GET /docs  — Markdown documentation page (src/docs.md, inlined at build time)
+//
+// To add a skill: edit the SKILLS array below, then `npm run deploy`.
+// To edit the docs page: edit src/docs.md, then `npm run deploy`.
 
-// src/index.js
-var SKILLS = [
+import DOCS_MARKDOWN from "./docs.md";
+
+const SKILLS = [
   {
     name: "cf-blog",
     description: "Documentation for cf-blog - publishing workflow and upload API.",
@@ -28,7 +34,8 @@ var SKILLS = [
     }
   }
 ];
-var PORTAL_META = {
+
+const PORTAL_META = {
   name: "kurashizu skill portal",
   description: "Aggregates documentation references for agent skills. Each skill has a discovery block (how to find its docs) and an execution block (how to run it, typically via remote-shell). See / for available skills.",
   version: "2",
@@ -43,27 +50,28 @@ var PORTAL_META = {
   },
   skills: SKILLS
 };
-var index_default = {
+
+export default {
   async fetch(request) {
     const url = new URL(request.url);
+
     if (url.pathname === "/docs") {
-      return new Response(docs_default, {
+      return new Response(DOCS_MARKDOWN, {
         status: 200,
         headers: { "Content-Type": "text/markdown" }
       });
     }
+
     if (url.pathname === "/" || url.pathname === "") {
       return new Response(JSON.stringify(PORTAL_META, null, 2), {
         status: 200,
         headers: { "Content-Type": "application/json" }
       });
     }
+
     return new Response(JSON.stringify({ error: "not found", path: url.pathname }, null, 2), {
       status: 404,
       headers: { "Content-Type": "application/json" }
     });
   }
-};
-export {
-  index_default as default
 };

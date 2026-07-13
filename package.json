@@ -1,0 +1,19 @@
+{
+  "name": "skill-portal",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker that aggregates documentation references for agent skills",
+  "private": true,
+  "type": "module",
+  "main": "skill-portal-worker.js",
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --format=esm --target=es2022 --loader:.md=text --outfile=skill-portal-worker.js",
+    "build:watch": "esbuild src/index.js --bundle --format=esm --target=es2022 --loader:.md=text --outfile=skill-portal-worker.js --watch",
+    "deploy": "npm run build && wrangler deploy",
+    "dev": "wrangler dev",
+    "tail": "wrangler tail --name skill-portal"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1",
+    "wrangler": "^4.110.0"
+  }
+}
