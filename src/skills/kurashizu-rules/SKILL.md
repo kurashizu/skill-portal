@@ -26,12 +26,14 @@ Highest-priority skill. Read before any task or other skill.
 
 ## GitHub
 
-- All GitHub work via `gh` CLI (`kurashizu` account already logged in).
-- View repo: `gh repo view <owner>/<repo>`
-- Fetch file: `gh api repos/<owner>/<repo>/contents/<path>`
-- PR / issue: `gh pr create`, `gh issue create`
-- Don't re-add `git remote` or invent tokens. After edits push with `gh`, don't re-`git config` identity.
-- Before destructive operations (force push, delete branch/repo) — confirm first.
+- All GitHub work via `gh` CLI.
+- View / fetch / PR / issue: `gh repo view`, `gh api .../contents/...`, `gh pr create`, `gh issue create`.
+- Don't re-add `git remote` or invent tokens. After edits, push with `gh` — don't re-`git config` identity.
+- Before destructive ops (force push, delete branch/repo) — confirm first.
+
+## TTS
+
+- Use `edge-tts` for any text-to-speech.
 
 ## Relation to Other Skills
 
