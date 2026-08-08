@@ -26,21 +26,14 @@ Highest-priority skill. Read before any task or other skill.
 
 ## CLIs (default to these; all pre-authenticated)
 
-Use the dedicated CLI instead of re-implementing with curl / config / token juggling:
+- **GitHub**: `gh`
+- **Hugging Face**: `hf`
+- **Cloudflare (Workers / KV / D1 / R2)**: `wrangler`
+- **AWS**: `aws`
 
-- **GitHub**: `gh` — `gh repo view`, `gh api .../contents/...`, `gh pr create`, `gh issue create`.
-- **Hugging Face**: `hf` — model/dataset download, upload, repo management.
-- **Cloudflare (Workers / KV / D1 / R2)**: `wrangler` — deploy, tail, secret put, d1/kv/r2 commands.
-- **AWS**: `aws` — s3, lambda, ec2, etc.
+Before destructive ops (force push, delete branch/bucket, drop db) — confirm first.
 
-Don't re-add `git remote`, re-export tokens, or run `aws configure` — they already work. After edits, push / deploy with the right CLI; don't re-`git config` identity. Before destructive ops (force push, delete branch/bucket, drop db) — confirm first.
+## Media
 
-## TTS
-
-- Use `edge-tts` for any text-to-speech.
-
-## Relation to Other Skills
-
-- Read this before any other skill.
-- If a task-specific skill conflicts, this file wins.
-- These are soft constraints — follow task skills when clearly better, but keep this file's style.
+- **TTS**: `edge-tts` for any text-to-speech.
+- **All other media processing** (audio/video/image convert, trim, concat, mux, extract, thumbnail, etc.): `ffmpeg`. No custom scripts for things ffmpeg does in one line.
