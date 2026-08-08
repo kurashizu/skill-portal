@@ -2,11 +2,14 @@
 // Endpoints:
 //   GET /                  — portal meta + skill list (summary)
 //   GET /api/skills        — same skill list, summary only
-//   GET /api/skills/{name} — full skill (name + description + discovery + execution)
+//   GET /api/skills/{name} — full skill (name + description + discovery + remote_shell)
 //   GET /docs              — markdown documentation
 // To add a skill: edit SKILLS below, then `npm run deploy`.
 
 import DOCS_MARKDOWN from "./docs.md";
+
+const RULES_URL = "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md";
+const REMOTE_SHELL_URL = "https://shell.022025.xyz/openapi.json";
 
 const SKILLS = [
   {
@@ -17,7 +20,7 @@ const SKILLS = [
       url: "https://api.github.com/repos/kurashizu/cf-blog/contents/docs",
       hint: "Fetch files from the url to discover available documentation. Each entry includes a download_url to read file content."
     },
-    execution: [{ type: "remote-shell" }]
+    remote_shell: REMOTE_SHELL_URL
   },
   {
     name: "backup-unsw",
@@ -27,7 +30,7 @@ const SKILLS = [
       command: "gh repo view kurashizu/backup-unsw",
       hint: "Run the provided command in remote shell to read the README and discover usage instructions."
     },
-    execution: [{ type: "remote-shell" }]
+    remote_shell: REMOTE_SHELL_URL
   },
   {
     name: "podcast",
@@ -37,10 +40,7 @@ const SKILLS = [
       url: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/podcast/SKILL.md",
       hint: "Fetch the SKILL.md for the full pipeline spec: research sources, script structure, TTS settings, upload protocol, and delivery conventions."
     },
-    execution: [
-      { type: "local", hint: "Read src/skills/podcast/SKILL.md in this repo." },
-      { type: "remote-shell", hint: "Same docs reachable through the remote shell environment." }
-    ]
+    remote_shell: REMOTE_SHELL_URL
   }
 ];
 
@@ -48,18 +48,18 @@ function summarize(skill) {
   return {
     name: skill.name,
     description: skill.description,
-    execution: skill.execution.map(e => ({ type: e.type }))
+    remote_shell: skill.remote_shell
   };
 }
 
 const SKILL_BY_NAME = Object.fromEntries(SKILLS.map(s => [s.name, s]));
 
 const PORTAL_META = {
+  read_first: RULES_URL,
   name: "kurashizu skill portal",
   version: "2",
-  rules: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md",
+  rules: RULES_URL,
   docs: "https://skill.022025.xyz/docs",
-  remote_shell: "https://shell.022025.xyz/openapi.json",
   skills: SKILLS.map(summarize)
 };
 
