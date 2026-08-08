@@ -1,12 +1,14 @@
 // skill-portal Cloudflare Worker.
 // Endpoints:
 //   GET /                  — READ_ME_BEFORE_DOING_ANYTHING + docs + skill list (summary)
+//   GET /rules             — markdown for kurashizu-rules (highest-priority skill)
 //   GET /api/skills        — same skill list, summary only
 //   GET /api/skills/{name} — full skill (name + url + description + discovery)
 //   GET /docs              — markdown documentation
 // To add a skill: edit SKILLS below, then `npm run deploy`.
 
 import DOCS_MARKDOWN from "./docs.md";
+import RULES_MARKDOWN from "./skills/kurashizu-rules/SKILL.md";
 
 const RULES_URL = "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md";
 
@@ -83,6 +85,13 @@ export default {
 
     if (url.pathname === "/docs") {
       return new Response(DOCS_MARKDOWN, {
+        status: 200,
+        headers: { "Content-Type": "text/markdown" }
+      });
+    }
+
+    if (url.pathname === "/rules") {
+      return new Response(RULES_MARKDOWN, {
         status: 200,
         headers: { "Content-Type": "text/markdown" }
       });
