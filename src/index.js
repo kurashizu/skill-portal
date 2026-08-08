@@ -17,6 +17,19 @@ import DOCS_MARKDOWN from "./docs.md";
 
 const SKILLS = [
   {
+    name: "rules",
+    description: "kurashizu's personal working rules and tech-stack preferences for agents. Read this BEFORE any other skill or task. Tech defaults: SvelteKit for web, uv for Python. Tools: ddgr (search), r.jina.ai (fetch), npx ctx7 (docs), gh (GitHub).",
+    discovery: {
+      type: "url",
+      url: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md",
+      hint: "Read this first. Highest-priority skill: working rules, language defaults, tech stack, and CLI tool preferences. Read BEFORE any other skill or task."
+    },
+    execution: [
+      { type: "local" },
+      { type: "remote-shell" }
+    ]
+  },
+  {
     name: "cf-blog",
     description: "Documentation for cf-blog - publishing workflow and upload API.",
     discovery: {
@@ -35,19 +48,6 @@ const SKILLS = [
       hint: "Run the provided command in remote shell to read the README and discover usage instructions."
     },
     execution: [{ type: "remote-shell" }]
-  },
-  {
-    name: "rules",
-    description: "kurashizu's personal working rules and tech-stack preferences for agents. Read this BEFORE any other skill or task. Tech defaults: SvelteKit for web, uv for Python. Tools: ddgr (search), r.jina.ai (fetch), npx ctx7 (docs), gh (GitHub).",
-    discovery: {
-      type: "url",
-      url: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md",
-      hint: "Read this first. Highest-priority skill: working rules, language defaults, tech stack, and CLI tool preferences. Read BEFORE any other skill or task."
-    },
-    execution: [
-      { type: "local" },
-      { type: "remote-shell" }
-    ]
   },
   {
     name: "podcast",
