@@ -11,9 +11,12 @@ import DOCS_MARKDOWN from "./docs.md";
 const RULES_URL = "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md";
 const REMOTE_SHELL_URL = "https://shell.022025.xyz/openapi.json";
 
+// For skills with a remote-shell-only discovery, `url` points at the GitHub repo
+// the agent should read directly (the same source the remote-shell command would fetch).
 const SKILLS = [
   {
     name: "cf-blog",
+    url: "https://github.com/kurashizu/cf-blog",
     description: "Publishing workflow and upload API for cf-blog.",
     discovery: {
       type: "url",
@@ -24,6 +27,7 @@ const SKILLS = [
   },
   {
     name: "backup-unsw",
+    url: "https://github.com/kurashizu/backup-unsw",
     description: "Backup and sync UNSW course project files.",
     discovery: {
       type: "remote-shell",
@@ -34,6 +38,7 @@ const SKILLS = [
   },
   {
     name: "podcast",
+    url: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/podcast/SKILL.md",
     description: "End-to-end Chinese tech podcast pipeline: research, scripting, edge-TTS, and share-link delivery.",
     discovery: {
       type: "url",
@@ -47,6 +52,7 @@ const SKILLS = [
 function summarize(skill) {
   return {
     name: skill.name,
+    url: skill.url,
     description: skill.description,
     remote_shell: skill.remote_shell
   };
