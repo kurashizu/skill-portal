@@ -24,12 +24,16 @@ Highest-priority skill. Read before any task or other skill.
 - Tech docs: `npx ctx7 <library-name>`
 - Time-sensitive info (news, prices, versions): search before answering — never answer from training data.
 
-## GitHub
+## CLIs (default to these; all pre-authenticated)
 
-- All GitHub work via `gh` CLI.
-- View / fetch / PR / issue: `gh repo view`, `gh api .../contents/...`, `gh pr create`, `gh issue create`.
-- Don't re-add `git remote` or invent tokens. After edits, push with `gh` — don't re-`git config` identity.
-- Before destructive ops (force push, delete branch/repo) — confirm first.
+Use the dedicated CLI instead of re-implementing with curl / config / token juggling:
+
+- **GitHub**: `gh` — `gh repo view`, `gh api .../contents/...`, `gh pr create`, `gh issue create`.
+- **Hugging Face**: `hf` — model/dataset download, upload, repo management.
+- **Cloudflare (Workers / KV / D1 / R2)**: `wrangler` — deploy, tail, secret put, d1/kv/r2 commands.
+- **AWS**: `aws` — s3, lambda, ec2, etc.
+
+Don't re-add `git remote`, re-export tokens, or run `aws configure` — they already work. After edits, push / deploy with the right CLI; don't re-`git config` identity. Before destructive ops (force push, delete branch/bucket, drop db) — confirm first.
 
 ## TTS
 
