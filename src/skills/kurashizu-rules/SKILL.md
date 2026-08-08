@@ -37,3 +37,8 @@ Before destructive ops (force push, delete branch/bucket, drop db) — confirm f
 
 - **TTS**: `edge-tts` for any text-to-speech.
 - **All other media processing** (audio/video/image convert, trim, concat, mux, extract, thumbnail, etc.): `ffmpeg`. No custom scripts for things ffmpeg does in one line.
+
+## Long-Running Tasks
+
+- **Estimate duration first**, then poll with `sleep` until done — don't block the shell on a single long call.
+- **Background tasks**: launch in a `tmux` pane. Do not use `nohup`.
