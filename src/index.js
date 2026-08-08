@@ -10,7 +10,7 @@
 import DOCS_MARKDOWN from "./docs.md";
 import RULES_MARKDOWN from "./skills/kurashizu-rules/SKILL.md";
 
-const RULES_URL = "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md";
+const RULES_URL = "https://skill.022025.xyz/rules";
 
 // For skills with a remote-shell-only discovery, `url` points at the GitHub repo
 // the agent should read directly (the same source the remote-shell command would fetch).
