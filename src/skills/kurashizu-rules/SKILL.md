@@ -2,6 +2,8 @@
 
 Highest-priority skill. Read before any task or other skill.
 
+Follow best practices and KISS in everything.
+
 ## Language
 
 - Project code, comments, and docs: **English by default**.
@@ -30,8 +32,6 @@ Highest-priority skill. Read before any task or other skill.
 - **Hugging Face**: `hf`
 - **Cloudflare (Workers / KV / D1 / R2)**: `wrangler`
 - **AWS**: `aws`
-
-Before destructive ops (force push, delete branch/bucket, drop db) — confirm first.
 
 ## Media
 
