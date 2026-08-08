@@ -37,6 +37,19 @@ const SKILLS = [
     execution: [{ type: "remote-shell" }]
   },
   {
+    name: "rules",
+    description: "kurashizu's personal rules and tool preferences for agents. Read this BEFORE any other skill or task. Covers web search (ddgr), web fetch (r.jina.ai), tech docs (npx ctx7), and GitHub operations (gh CLI).",
+    discovery: {
+      type: "url",
+      url: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md",
+      hint: "Read this first. Lists kurashizu's preferred CLI tools (ddgr, r.jina.ai, npx ctx7, gh) and working rules. Read BEFORE any other skill or task."
+    },
+    execution: [
+      { type: "local" },
+      { type: "remote-shell" }
+    ]
+  },
+  {
     name: "podcast",
     description: "End-to-end Chinese tech podcast pipeline: research, scripting, edge-TTS, and short-lived share-link delivery.",
     discovery: {
