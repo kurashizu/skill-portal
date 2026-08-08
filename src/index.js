@@ -1,24 +1,17 @@
 // skill-portal Cloudflare Worker.
-// Two endpoints:
-//   GET /      — JSON registry of skills (name + discovery + execution)
-//   GET /docs  — Markdown documentation page (src/docs.md, inlined at build time)
-//
-// To add a skill: edit the SKILLS array below, then `npm run deploy`.
-// To edit the docs page: edit src/docs.md, then `npm run deploy`.
-//
-// Schema notes:
-//   discovery  — single object describing how to find the skill's docs.
-//   execution  — array of execution environments the skill can run in.
-//                Most skills only run in one environment; the array form
-//                covers cases like podcast which runs both locally and
-//                in remote-shell.
+// Endpoints:
+//   GET /                  — portal meta + skill list (summary)
+//   GET /api/skills        — same skill list, summary only
+//   GET /api/skills/{name} — full skill (name + description + discovery + execution)
+//   GET /docs              — markdown documentation
+// To add a skill: edit SKILLS below, then `npm run deploy`.
 
 import DOCS_MARKDOWN from "./docs.md";
 
 const SKILLS = [
   {
     name: "cf-blog",
-    description: "Documentation for cf-blog - publishing workflow and upload API.",
+    description: "Publishing workflow and upload API for cf-blog.",
     discovery: {
       type: "url",
       url: "https://api.github.com/repos/kurashizu/cf-blog/contents/docs",
@@ -28,7 +21,7 @@ const SKILLS = [
   },
   {
     name: "backup-unsw",
-    description: "Backup and sync UNSW course project files. Use this when working with UNSW assignments, project files, or coursework backups.",
+    description: "Backup and sync UNSW course project files.",
     discovery: {
       type: "remote-shell",
       command: "gh repo view kurashizu/backup-unsw",
@@ -38,41 +31,43 @@ const SKILLS = [
   },
   {
     name: "podcast",
-    description: "End-to-end Chinese tech podcast pipeline: research, scripting, edge-TTS, and short-lived share-link delivery.",
+    description: "End-to-end Chinese tech podcast pipeline: research, scripting, edge-TTS, and share-link delivery.",
     discovery: {
       type: "url",
       url: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/podcast/SKILL.md",
       hint: "Fetch the SKILL.md for the full pipeline spec: research sources, script structure, TTS settings, upload protocol, and delivery conventions."
     },
     execution: [
-      {
-        type: "local",
-        hint: "Read src/skills/podcast/SKILL.md in this repo. The docs bundle includes the pipeline spec and any helper scripts alongside the doc."
-      },
-      {
-        type: "remote-shell",
-        hint: "Same docs are reachable through the remote shell environment when no local clone is available."
-      }
+      { type: "local", hint: "Read src/skills/podcast/SKILL.md in this repo." },
+      { type: "remote-shell", hint: "Same docs reachable through the remote shell environment." }
     ]
   }
 ];
 
+function summarize(skill) {
+  return {
+    name: skill.name,
+    description: skill.description,
+    execution: skill.execution.map(e => ({ type: e.type }))
+  };
+}
+
+const SKILL_BY_NAME = Object.fromEntries(SKILLS.map(s => [s.name, s]));
+
 const PORTAL_META = {
   name: "kurashizu skill portal",
-  description: "Aggregates documentation references for agent skills. Each skill has a discovery block (how to find its docs) and an execution block (one or more environments the skill can run in, e.g. local or remote-shell). See / for available skills.",
   version: "2",
   rules: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md",
   docs: "https://skill.022025.xyz/docs",
-  remote_shell: {
-    description: "Execution environment for skills that reference remote-shell in their discovery or execution blocks. Read the docs (OpenAPI spec) for endpoint details and auth.",
-    docs: "https://shell.022025.xyz/openapi.json",
-    auth: {
-      type: "bearer",
-      hint: "Token required. Ask portal owner."
-    }
-  },
-  skills: SKILLS
+  remote_shell: "https://shell.022025.xyz/openapi.json",
+  skills: SKILLS.map(summarize)
 };
+
+const json = (body, status = 200) =>
+  new Response(JSON.stringify(body, null, 2), {
+    status,
+    headers: { "Content-Type": "application/json" }
+  });
 
 export default {
   async fetch(request) {
@@ -86,15 +81,19 @@ export default {
     }
 
     if (url.pathname === "/" || url.pathname === "") {
-      return new Response(JSON.stringify(PORTAL_META, null, 2), {
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      });
+      return json(PORTAL_META);
     }
 
-    return new Response(JSON.stringify({ error: "not found", path: url.pathname }, null, 2), {
-      status: 404,
-      headers: { "Content-Type": "application/json" }
-    });
+    if (url.pathname === "/api/skills") {
+      return json(SKILLS.map(summarize));
+    }
+
+    const m = url.pathname.match(/^\/api\/skills\/([^/]+)$/);
+    if (m) {
+      const skill = SKILL_BY_NAME[m[1]];
+      return skill ? json(skill) : json({ error: "not found", name: m[1] }, 404);
+    }
+
+    return json({ error: "not found", path: url.pathname }, 404);
   }
 };
