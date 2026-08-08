@@ -1,19 +1,28 @@
 // skill-portal Cloudflare Worker.
 // Endpoints:
-//   GET /                  — portal meta + skill list (summary)
+//   GET /                  — READ_ME_BEFORE_DOING_ANYTHING + docs + skill list (summary)
 //   GET /api/skills        — same skill list, summary only
-//   GET /api/skills/{name} — full skill (name + description + discovery + remote_shell)
+//   GET /api/skills/{name} — full skill (name + url + description + discovery)
 //   GET /docs              — markdown documentation
 // To add a skill: edit SKILLS below, then `npm run deploy`.
 
 import DOCS_MARKDOWN from "./docs.md";
 
 const RULES_URL = "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md";
-const REMOTE_SHELL_URL = "https://shell.022025.xyz/openapi.json";
 
 // For skills with a remote-shell-only discovery, `url` points at the GitHub repo
 // the agent should read directly (the same source the remote-shell command would fetch).
 const SKILLS = [
+  {
+    name: "remote-shell",
+    url: "https://shell.022025.xyz/openapi.json",
+    description: "Sandboxed shell backend for executing skills. Bearer-token auth. Read the OpenAPI spec for endpoints and use it to run any skill whose discovery is type \"remote-shell\".",
+    discovery: {
+      type: "url",
+      url: "https://shell.022025.xyz/openapi.json",
+      hint: "Fetch the OpenAPI spec for endpoint list and bearer auth header."
+    }
+  },
   {
     name: "cf-blog",
     url: "https://github.com/kurashizu/cf-blog",
@@ -22,8 +31,7 @@ const SKILLS = [
       type: "url",
       url: "https://api.github.com/repos/kurashizu/cf-blog/contents/docs",
       hint: "Fetch files from the url to discover available documentation. Each entry includes a download_url to read file content."
-    },
-    remote_shell: REMOTE_SHELL_URL
+    }
   },
   {
     name: "backup-unsw",
@@ -33,8 +41,7 @@ const SKILLS = [
       type: "remote-shell",
       command: "gh repo view kurashizu/backup-unsw",
       hint: "Run the provided command in remote shell to read the README and discover usage instructions."
-    },
-    remote_shell: REMOTE_SHELL_URL
+    }
   },
   {
     name: "podcast",
@@ -44,8 +51,7 @@ const SKILLS = [
       type: "url",
       url: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/podcast/SKILL.md",
       hint: "Fetch the SKILL.md for the full pipeline spec: research sources, script structure, TTS settings, upload protocol, and delivery conventions."
-    },
-    remote_shell: REMOTE_SHELL_URL
+    }
   }
 ];
 
@@ -53,18 +59,14 @@ function summarize(skill) {
   return {
     name: skill.name,
     url: skill.url,
-    description: skill.description,
-    remote_shell: skill.remote_shell
+    description: skill.description
   };
 }
 
 const SKILL_BY_NAME = Object.fromEntries(SKILLS.map(s => [s.name, s]));
 
 const PORTAL_META = {
-  read_first: RULES_URL,
-  name: "kurashizu skill portal",
-  version: "2",
-  rules: RULES_URL,
+  READ_ME_BEFORE_DOING_ANYTHING: RULES_URL,
   docs: "https://skill.022025.xyz/docs",
   skills: SKILLS.map(summarize)
 };
