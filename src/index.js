@@ -57,25 +57,11 @@ const SKILLS = [
   }
 ];
 
-const RULES = {
-  name: "rules",
-  description: "kurashizu's personal working rules and tech-stack preferences for agents. Read this BEFORE any other skill or task. Tech defaults: SvelteKit for web, uv for Python. Tools: ddgr (search), r.jina.ai (fetch), npx ctx7 (docs), gh (GitHub).",
-  discovery: {
-    type: "url",
-    url: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md",
-    hint: "Read this first. Highest-priority skill: working rules, language defaults, tech stack, and CLI tool preferences. Read BEFORE any other skill or task."
-  },
-  execution: [
-    { type: "local" },
-    { type: "remote-shell" }
-  ]
-};
-
 const PORTAL_META = {
   name: "kurashizu skill portal",
   description: "Aggregates documentation references for agent skills. Each skill has a discovery block (how to find its docs) and an execution block (one or more environments the skill can run in, e.g. local or remote-shell). See / for available skills.",
   version: "2",
-  rules: RULES,
+  rules: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md",
   docs: "https://skill.022025.xyz/docs",
   remote_shell: {
     description: "Execution environment for skills that reference remote-shell in their discovery or execution blocks. Read the docs (OpenAPI spec) for endpoint details and auth.",
