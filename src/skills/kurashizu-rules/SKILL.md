@@ -1,46 +1,68 @@
-# kurashizu-rules — Agent 工作偏好与规则
+# kurashizu-rules — Agent Working Rules and Preferences
 
-**优先级最高的 skill**。任何 agent 在执行任务前,先读完本文件。
-
----
-
-## 触发条件
-
-agent 即将为 kurashizu 执行任何任务。在调用工具、产出结论、或开始动手之前,先通读本文件并把以下规则纳入行为。
+**Highest-priority skill.** Any agent must read this file before starting any task.
 
 ---
 
-## 联网搜索 / 信息获取
+## Trigger
 
-- **Web 搜索**:用 `ddgr` CLI
-  ```bash
-  ddgr --json -n 10 "your query here"
-  ```
-- **网页抓取**:用 `curl r.jina.ai/<url>` 拉可读化的页面内容
-  ```bash
-  curl -sSL "https://r.jina.ai/https://example.com/article"
-  ```
-  不直接用 `curl <url>` 抓 HTML 自己解析;jina 已经返回干净的 markdown。
-- **技术文档**:用 `npx ctx7` 查库 / 框架 / API 文档
-  ```bash
-  npx ctx7 <library-name>
-  ```
-  优先用 ctx7 而不是凭印象写 API(签名 / 参数 / 行为可能跟训练数据不一样)。
+Whenever an agent is about to do anything for kurashizu (chat, code, research, run commands, maintain projects, answer questions, etc.), read this file end-to-end and apply the rules below.
 
 ---
 
-## 仓库 / GitHub 操作
+## Language
 
-- 所有 GitHub 操作走 `gh` CLI(`kurashizu` 账号已登录)。
-- 查仓库:`gh repo view <owner>/<repo>`
-- 拉文件:`gh api repos/<owner>/<repo>/contents/<path>`
-- 创建 / 改 PR / issue:`gh pr create`, `gh issue create`
-- 不要重新 `git remote add` 或自己造 token。
-- 危险操作(force push、删分支、删 repo)前先确认。
+- All project code, comments, and documentation are **English by default**.
+- Do not write code comments or docstrings in Chinese, even when chatting with kurashizu in Chinese.
+- Chat with kurashizu in Chinese unless kurashizu switches to English.
 
 ---
 
-## 与其他 skill 的关系
+## Tech Stack Preferences
 
-- 本 skill **必须先于** `cf-blog`、`backup-unsw`、`podcast` 等具体任务 skill 读取。
-- 任务与本规则冲突时,以本规则为准。
+- **Web development**: prefer **SvelteKit**.
+- **Python development**: use **uv** for project management and maintenance. Always.
+  - `uv init`, `uv add`, `uv run`, `uv lock` — not `pip`, not `poetry`, not `pipenv`.
+- Do not introduce alternative web frameworks (Next.js, Nuxt, plain Vite, etc.) or alternative Python tooling without explicit ask.
+
+---
+
+## Web Search / Information Retrieval
+
+Pick the cheapest tool that fits:
+
+1. **Web search** — use `ddgr` CLI
+   ```bash
+   ddgr --json -n 10 "your query here"
+   ```
+2. **Web page fetch** — use `curl r.jina.ai/<url>` to get a clean, readable render
+   ```bash
+   curl -sSL "https://r.jina.ai/https://example.com/article"
+   ```
+   Don't `curl <url>` raw HTML and parse it yourself — r.jina.ai already returns clean markdown.
+3. **Tech docs** — use `npx ctx7` to look up libraries / frameworks / APIs
+   ```bash
+   npx ctx7 <library-name>
+   ```
+   Prefer ctx7 over writing API from memory — signatures, params, and behavior can drift from training data.
+4. **Time-sensitive info** (news, prices, latest versions) — always search before answering; never answer from training data.
+
+---
+
+## GitHub Operations
+
+- All GitHub work goes through the `gh` CLI (`kurashizu` account is already logged in).
+- View a repo: `gh repo view <owner>/<repo>`
+- Fetch a file: `gh api repos/<owner>/<repo>/contents/<path>`
+- Create / update PR or issue: `gh pr create`, `gh issue create`
+- Don't re-add `git remote` or invent tokens — `gh` already has auth.
+- After edits, push with `gh`; don't re-`git config` identity.
+- Before destructive operations (force push, delete branch, delete repo) — confirm with kurashizu first.
+
+---
+
+## Relation to Other Skills
+
+- This skill must be read **before** any other skill (`cf-blog`, `backup-unsw`, `podcast`, etc.) or any task.
+- If a task-specific skill conflicts with this file, this file wins.
+- These rules are **soft constraints** — when a specific task has a clearly better convention, follow the task skill, but keep the communication and judgment style defined here.

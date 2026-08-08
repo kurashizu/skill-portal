@@ -38,11 +38,11 @@ const SKILLS = [
   },
   {
     name: "rules",
-    description: "kurashizu's personal rules and tool preferences for agents. Read this BEFORE any other skill or task. Covers web search (ddgr), web fetch (r.jina.ai), tech docs (npx ctx7), and GitHub operations (gh CLI).",
+    description: "kurashizu's personal working rules and tech-stack preferences for agents. Read this BEFORE any other skill or task. Tech defaults: SvelteKit for web, uv for Python. Tools: ddgr (search), r.jina.ai (fetch), npx ctx7 (docs), gh (GitHub).",
     discovery: {
       type: "url",
       url: "https://raw.githubusercontent.com/kurashizu/skill-portal/main/src/skills/kurashizu-rules/SKILL.md",
-      hint: "Read this first. Lists kurashizu's preferred CLI tools (ddgr, r.jina.ai, npx ctx7, gh) and working rules. Read BEFORE any other skill or task."
+      hint: "Read this first. Highest-priority skill: working rules, language defaults, tech stack, and CLI tool preferences. Read BEFORE any other skill or task."
     },
     execution: [
       { type: "local" },
